@@ -1,7 +1,32 @@
 import random
 from collections import deque
 
-ALPHABET = "abcdefghijklmnopqrstuvwxyz"
+ALPHABET = "abcdefghijklmnopqrstuvwxyz_"
+
+def vigenere(key, message, mode):
+	'''
+	This isn't related to Enigma, but it's nice to have.
+	Implements the Vigenere cipher.
+	'''
+	message = message.replace(' ', '_')
+	pad = ''
+	res = ''
+	while len(pad) < len(message):
+		pad += key
+
+	if mode == 'enc':
+		for i in range(len(message)):
+			newPos = (ALPHABET.find(message[i]) + ALPHABET.find(pad[i])) % len(ALPHABET)
+			res += ALPHABET[newPos]
+	elif mode == 'dec':
+		for i in range(len(message)):
+			newPos = (ALPHABET.find(message[i]) - ALPHABET.find(pad[i])) % len(ALPHABET)
+			res += ALPHABET[newPos]
+		res = res.replace('_',' ')
+	else:
+		print("use enc or dec as mode")
+
+	return res
 
 class Rotor:
 	def __init__(self,transitions = None):
