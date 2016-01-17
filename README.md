@@ -20,7 +20,9 @@ https://en.wikipedia.org/wiki/Enigma_machine
 
 Simulation of the German machine used during WW2. This is a 3-rotor machine, with a reflector. The rotor subsitutions are randomly generated, but I plan to add customisable rotors, for more historically-accurate fun. Many features are still missing, like swapping rotors around and maybe a customisable amount of rotors. 
 
-Currently, you can't decrypt. So it's very secure :P
+To use it, call cryptos.EnigmaKey() to create an object. If your object is assigned to a variable called 'ek', you can use ek.encrypt(letter). To reset the machine in its original state, use ek.reset(). You can see the various properties by calling ek.toString() and see the key used by calling ek.getKey().
+
+Currently, you can't decrypt. Ie. ek.reset() fucks up. I think. So it's very secure :P
 
 ### Future plans
 + Finish Enigma
@@ -29,3 +31,5 @@ Currently, you can't decrypt. So it's very secure :P
 + RSA
 + DES
 + AES
+
+I welcome all constructive suggestions, so just create an issue or a pull request and I'll look into it.
