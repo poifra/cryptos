@@ -2,7 +2,7 @@ import random
 from collections import deque
 from copy import deepcopy
 
-ALPHABET = "abcdefghijklmnopqrstuvwxyz "
+ALPHABET = "abcdefghijklmnopqrstuvwxyz".upper()
 SIZE = len(ALPHABET)
 
 def cesar(n, message, mode):
@@ -12,12 +12,14 @@ def cesar(n, message, mode):
 	res = ''
 	if mode == 'enc':
 		for c in message:
-			res += ALPHABET[(find(c) + n) % SIZE]
+			res += ALPHABET[(ALPHABET.find(c) + n) % SIZE]
 	elif mode == 'dec':
 		for c in message:
-			res += ALPHABET[(find(c) - n) % SIZE]
+			res += ALPHABET[(ALPHABET.find(c) - n) % SIZE]
 	else:
 		raise ValueError("use 'enc' or 'dec' (without quotes) as mode")
+
+	return res
 
 def vigenere(key, message, mode):
 	'''
@@ -46,35 +48,44 @@ class Rotor:
 		self.nbDecal = 0
 		self.reflector = reflector
 		if transitions is None:
-			self.transitions = deque(list(ALPHABET))
-			while self.transitions[0] is 'a':
-				self.transitions.rotate(random.randint(1,25))
+			self.transTable = deque()
+			cpyAlpha = list(deepcopy(ALPHABET))
+			random.shuffle(cpyAlpha)
+			for c in ALPHABET:
+				self.transTable.append(cpyAlpha.pop())
+			
 		else:
-			self.transitions = transitions
-		self.originalTransition = deepcopy(self.transitions)
-		self.startPos = self.transitions[0]
+			if type(transitions) is str:
+				self.transTable = deque(transitions)
+			else:
+				self.transTable = transitions
+		self.originalTransition = deepcopy(self.transTable)
+		self.startPos = self.transTable[0]
 		self.position = 0
 
 	def correspondance(self,letter):
-		return self.transitions[ALPHABET.index(letter)]
+		return self.transTable[ALPHABET.index(letter)]
 
 	def shift(self):
 		self.nbDecal += 1
-		self.transitions.rotate(1)
+		self.transTable.rotate(1)
 
 	def toString(self):
-		return "original : "+str(self.originalTransition)+" current : "+str(self.transitions)
+		subs = ''
+		for c in self.transTable:
+			subs += c
+		return subs
 
 	def reset(self):
-		self.transitions = self.originalTransition
+		self.transTable = self.originalTransition
 		self.nbDecal = 0
 		
 class EnigmaKey:
 	def __init__(self, letterFlips = None):
-		self.rotor1 = Rotor()
-		self.rotor2 = Rotor()
-		self.rotor3 = Rotor()
-		self.reflector = Rotor(reflector = True)
+		self.leftRotor = Rotor(transitions = 'EKMFLGDQVZNTOWYHXUSPAIBRCJ')
+		self.midRotor = Rotor(transitions = 'AJDKSIRUXBLHWTMCQGZNPYFVOE')
+		self.rightRotor = Rotor(transitions = 'BDFHJLCPRTXVZNYEIWGAKMUSQO')
+		self.reflector = Rotor(reflector = True, transitions = "YRUHQSLDPXNGOKMIEBFZCWVJAT")
 		if letterFlips is None:
 			self.letterFlips = dict()
 			for letter in ALPHABET:
@@ -82,34 +93,63 @@ class EnigmaKey:
 		else:
 			self.letterFlips = letterFlips
 	def encrypt(self,letter):
-		self.rotor1.shift()
-		if self.rotor1.nbDecal == 26:
-			self.rotor2.shift()
-			self.rotor1.nbDecal = 0
-			if self.rotor2.nbDecal == 26:
-				self.rotor3.shift()
-				self.rotor2.nbDecal = 0
-		transition = self.rotor1.correspondance(letter)
-		transition = self.rotor2.correspondance(transition)
-		transition = self.rotor3.correspondance(transition)
+		'''
+		Enigma Process
+		1. Validate input
+		2. Rotate wheels
+		3. Pass through plugboard
+		4. Pass through right-hand wheel
+		5. Pass through middle wheel
+		6. Pass through left-hand wheel
+		7. Pass through reflector
+		8. Pass through left-hand wheel
+		9. Pass through middle wheel
+		10. Pass through right-hand wheel
+		11. Pass through plugboard
+		12. Convert to output letter
+		'''
+		self._rotateRotors()
+		print("init letter " + letter)
+		transition = self.leftRotor.correspondance(letter)
+		print("it became " + transition + " after left rotor")
+		transition = self.midRotor.correspondance(transition)
+		print("it became " + transition + " after mid rotor")
+		transition = self.rightRotor.correspondance(transition)
+		print("it became " + transition + " after right rotor")
 		transition = self.reflector.correspondance(transition)
-		transition = self.rotor3.correspondance(transition)
-		transition = self.rotor2.correspondance(transition)
-		transition = self.rotor1.correspondance(transition)
+		print("it became " + transition + " after reflector")
+		transition = self.rightRotor.correspondance(transition)
+		print("it became " + transition + " after right rotor")
+		transition = self.midRotor.correspondance(transition)
+		print("it became " + transition + " after mid rotor")
+		transition = self.leftRotor.correspondance(transition)
+		print("it became " + transition + " after left rotor")
+
 		return transition
 	
+	def _rotateRotors(self):
+		self.leftRotor.shift()
+		if self.leftRotor.nbDecal == 26:
+			self.midRotor.shift()
+			self.leftRotor.nbDecal = 0
+			if self.midRotor. shift == 26:
+				self.rightRotor.shift()
+				self.midRotor.nbDecal = 0
+	
 	def reset(self):
-		self.rotor1.reset()
-		self.rotor2.reset()
-		self.rotor3.reset()
+		self.leftRotor.reset()
+		self.midRotor.reset()
+		self.rightRotor.reset()
 
 	def getKey(self):
-		return "Start positions : "+self.rotor1.startPos+", "+self.rotor2.startPos+", "+self.rotor3.startPos
+		return "Start positions : "+self.leftRotor.startPos+", "+self.midRotor.startPos+", "+self.leftRotor.startPos
 		
 	def toString(self):
-		print(self.rotor1.toString())
-		print(self.rotor2.toString())
-		print(self.rotor3.toString())
+		print(ALPHABET)
+		print(self.leftRotor.toString() + " left")
+		print(self.midRotor.toString() + " mid")
+		print(self.rightRotor.toString() + " right")
+		print(self.reflector.toString() + " reflector")
 		
 class RSAKey:
 	pass
