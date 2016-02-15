@@ -12,7 +12,7 @@ def getPrime(keysize=1024):
 	while True:
 		prime = cryptoGen.randint(2**(ks-1),2**(ks+1))
 		prime |= 1 #make sure it's odd
-		if(len(bin(prime))-2 == ks and _isProbablePrime(prime,TEST_PRECISION)):
+		if(len(bin(prime))-2 == ks and isProbablePrime(prime,TEST_PRECISION)):
 			return prime
 
 def isProbablePrime(n,nbTrials):
@@ -84,4 +84,12 @@ class RSAKey:
 		return pow(c,self.d,self.n)
 
 if __name__=='__main__':
-	print(getPrime())
+	rsa = RSAKey()
+	print("p =",rsa.p)
+	print("q =",rsa.q)
+	print("n =",rsa.n)	
+	print("phi =",rsa.phi)
+	print("e =",rsa.e)
+	print("d =",rsa.d)
+	valid = rsa.decrypt(rsa.encrypt(253)) == 253
+	print("Validation : ((253^e)^d) mod n == 253", valid)
