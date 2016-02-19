@@ -1,0 +1,154 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Based on a TeXnicCenter-Template, which was             %%
+%% created by Christoph Börensen                           %%
+%% and slightly modified by Tino Weinkauf.                 %%
+%%                                                         %%
+%% Then, a third guy - me - put in some modifications.     %%
+%%                                                         %%
+%% IFT3275- Devoir 1	                                   %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\documentclass[letterpaper,12pt]{scrartcl}
+% Optimised for letter. Add ",twosides" to use the two-sides layout.
+
+% Margins
+    \usepackage{vmargin}
+    \setpapersize{USletter}
+    \setmargins{2.0cm}%	 % Left edge
+               {1.5cm}%  % Top edge
+               {17.7cm}% % Text width
+               {21.0cm}% % Text height
+               {14pt}%	 % Header height
+               {1cm}%    % Header distance
+               {0pt}%	 % Footer height
+               {2cm}%    % Footer distance
+				
+% Graphical bugfix (about footnotes)
+    \usepackage[bottom]{footmisc}
+
+% Fonts and locale
+	\usepackage{t1enc}
+	\usepackage[utf8]{inputenc}
+	\usepackage{times}
+	\usepackage[francais]{babel}
+	\usepackage{amsmath}
+	\usepackage{amsfonts}
+
+	\AtBeginDocument {%
+	    \renewcommand\tablename{\textsc{Tableau}}
+	}
+
+% Graphics
+	\usepackage[pdftex]{graphicx}
+	\usepackage{color}
+	\usepackage{eso-pic}
+	\usepackage{everyshi}
+	\renewcommand{\floatpagefraction}{0.7}
+
+% Enable hyperlinks
+	\usepackage[pdfborder=000,pdftex=true]{hyperref}
+	
+% Table layout
+	\usepackage{booktabs}
+
+% Caption
+	\usepackage{ccaption}
+	\captionnamefont{\bf\footnotesize\sffamily}
+	\captiontitlefont{\footnotesize\sffamily}
+	\setlength{\abovecaptionskip}{0mm}
+
+% Header and footer settings
+	\usepackage{scrpage2} 
+	\renewcommand{\headfont}{\footnotesize\sffamily}
+	\renewcommand{\pnumfont}{\footnotesize\sffamily}
+
+% Pagestyles
+	\defpagestyle{cb}{
+		(\textwidth,0pt) % Sets the border line above the header
+		{\pagemark\hfill\headmark\hfill} % Doublesided, left page
+		{\hfill\headmark\hfill\pagemark} % Doublesided, right page
+		{\hfill\headmark\hfill\pagemark} % Onesided
+		(\textwidth,1pt)} % Sets the border line below the header
+		{(\textwidth,1pt) % Sets the border line above the footer
+		{{\it Rapport Devoir 1 (IFT3275)}\hfill François Poitras} % Doublesided, left page
+		{François Poitras\hfill{\it Devoir 1 (IFT3275)}} % Doublesided, right page
+		{François Poitras\hfill{\it Devoir 1 (IFT3275)}} % One sided printing
+		(\textwidth,0pt) % Sets the border line below the footer
+	}
+
+% Empty pages style
+	\renewpagestyle{plain}
+		{(\textwidth,0pt)
+			{\hfill}{\hfill}{\hfill}
+		(\textwidth,0pt)}
+		{(\textwidth,0pt)
+			{\hfill}{\hfill}{\hfill}
+		(\textwidth,0pt)}
+
+% Footnotes
+	\renewcommand{\footnoterule}{\rule{5cm}{0.2mm} \vspace{0.3cm}}
+	\deffootnote[1em]{1em}{1em}{\textsuperscript{\normalfont\thefootnotemark}}
+
+\pagestyle{plain}
+
+\begin{document}
+	\begin{center}
+		\vspace{2cm}
+
+		{\Huge\bf\sf Devoir 1}
+
+		\vspace{4cm}
+
+		{\bf\sf Par}
+
+		\vspace{0.5cm}{\large\bf\sf François Poitras}
+
+		\vspace{2cm}
+
+		{\bf\sf Présenté à}
+
+		\vspace{0.5cm}{\large\bf\sf M. Alain Tapp}
+
+		\vspace{2cm}
+
+		{\bf\sf Dans le cadre du cours de}
+
+		\vspace{0.5cm}{\large\bf\sf Sécurité informatique (IFT3275)}
+
+		\vspace{\fill}
+		Remis le \today
+
+		\vspace{0.5cm}Université de Montréal
+	\end{center}
+	
+	\newpage
+
+	\pagestyle{cb}
+
+	\newpage
+	
+	\section*{Question 1}
+	Le message a été encrypté à l'aide d'un chiffre de Vigenère. La clé  semble être de longueur 25 et la clé la plus probable est "lsjfhtfslmbsvohbosvttmboe". Le message (traduit à l'aide de Google Translate), semble être un discours de Hitler sur la situation de l'Allemagne durant la Seconde Guerre Mondiale. On voit cela, car le message commence par "Peuple Allemand! Nazis!" Il n'est donc pas une information critique au déroulement de la guerre, mais permet de comprendre ce que Hitler explique dans ses discours aux Allemands. 
+	\section*{Question 2}
+	Une attaque de l'homme dans le milieu semble la meilleure façon de parvenir à une attaque crédible. En effet, la faiblesse du système de la banque repose sur l'absence d'utilisation d'authentification. Cela fait en sorte que la banque n'a aucune certitude sur le fait que son interlocuteur soit réellement le guichet et vice-versa. Si, d'une manière ou d'une autre, le malfaiteur parvient à se procurer une clef valide (il connait le système utilisé, alors il a une idée de ce à quoi ressemble la clef), il peut alors prétendre être le guichet et fournir toute sorte d'information érroneés à la banque. Il peut par exemple envoyer à la banque un faux dépôt d'argent.
+	\section*{Question 3}
+		Si $PGCD(m,N) \neq 1, N = pq$, l'algorithme fonctionne quand même, au sens où la procédure de décryption permet de retrouver le nombre encrypté à l'origine, tant que $|M| < n-1$. Cette restriction vient du fait que les opérations d'encryption et de décryption sont des opérations $\pmod n$. Le seul cas où $PGCD(m,N) \neq 1$ est le cas où $m$ est un multiple de $p$ ou de $q$, exclusivement. Si $M$ est un multiple de $p$ et de $q$, la condition posée initialement ne tient plus, car $M = n$.  Supposons, sans perte de généralité que $m$ est un multiple de $p$. Cela implique que $m = kp, k \in \mathbb{Z}^*$. Nous savons aussi que $m$ n'a pas d'inverse multiplicatif $\pmod n$. Considérant cela, le message chiffré sera 
+		\begin{align*}
+		c & = m^e \mod n \\
+		  & = kp^e \mod n \\
+		  & = k^e * p^e \mod n \\
+		  & = (k^e \mod n) *  (p^e \mod n)
+		\end{align*}
+Il est impossible de développer d'avantage l'expression et donc, le message envoyé n'aura rien de particulier et il reste sécuritaire.
+	\section*{Question 4}
+		Envoyée par courriel. Le test de primalité utilisé est le test de Miller-Rabin, avec une précision de 512 itérations. Cela signifie que les nombres premiers trouvés sont premiers avec une probabilité de $1-4^{-512}$ (selon la définition théorique de l'algorithme). Notons aussi que l'algorithme d'euclide étendu a été utilisé pour calculer l'inverse multiplicatif de $d (mod \phi)$. La classe \textit{SystemRandom} du module \textit{Random} a été utilisée afin de guarantir un hasard cryptographique (selon la page de documentation de Python). Notons toutefois que cette fonction peut être indisponible (et donc, faire planter le programme) sur certains systèmes. Le programme a été testé sous Linux (distribution Debian 7.9 wheezy) et sous Windows 7.
+	\section*{Question 5}
+		Il faut $2*|K|$ évaluations de \textit{CODE} et \textit{DECODE} pour retrouver les clés. Cela est du au fait que nous savons que $DECODE_{k2}(c) = CODE_{k1}(m)$ par le raisonnement suivant: 
+		\begin{align*}
+		c & = CODE_{k2}(CODE_{k1}(m)) \\
+		DECODE_{k2}(c) & = DECODE_{k2}(CODE_{k2}(CODE_{k1}(m))) \\
+					   & = CODE_{k1}(m)
+		\end{align*}
+La première étape consiste à faire une fouille exhaustive des clés $k2$ pour trouver tous les messages possibles $c1$ qui sont produits par $DECODE{k2}(c)$. Nous pouvons faire cela, car nous disposons de mémoire illimitée. Dans un deuxième temps, nous testons toutes les clés $k1$ et pour chaque $k1$, on vérifie si $CODE_{k1}(m)$ se retrouve dans la structure de données créee dans la première partie de l'algorithme. Dans le pire des cas, ce sera la dernière clef générée à la deuxième partie qui nous donnera la solution. Cela signifie que dans le pire des cas, il nous faudra évaluer $DECODE{k2}$ autant de fois qu'il y a de clefs $k2$ et évaluer $CODE_{k1}$ autant de fois qu'il y a de clefs $k1$. Puisque les deux clefs sont de la même longueur, nous avons $|k1| + |k2| = 2*|K|$ évaluations. 
+	%% END OF {Problèmes de programmation} %%
+\end{document}
